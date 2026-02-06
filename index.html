@@ -3,23 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daily Net Profit Tracker</title>
+  <title>Günlük Net Kar Takibi</title>
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0c0f14;
-      --panel: #141824;
-      --panel-alt: #1a2030;
-      --border: #2a3247;
-      --text: #eef1f7;
-      --muted: #9aa4b2;
-      --accent: #6cf3ff;
-      --accent-strong: #4f9cff;
-      --danger: #ff6b6b;
-      --success: #26f7a5;
-      --warning: #f3d26c;
-    }
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -28,55 +13,54 @@
 
     body {
       font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: #f4f6fb;
+      color: #101828;
       line-height: 1.5;
     }
 
     header {
-      padding: 32px 24px 16px;
+      padding: 28px 24px 12px;
       text-align: center;
     }
 
     header h1 {
-      font-size: 2.2rem;
+      font-size: 2rem;
       margin-bottom: 8px;
     }
 
     header p {
-      color: var(--muted);
+      color: #475467;
     }
 
     main {
       max-width: 1200px;
-      margin: 0 auto 48px;
+      margin: 0 auto 40px;
       padding: 0 24px;
       display: grid;
-      gap: 24px;
+      gap: 20px;
     }
 
     section {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      background: #ffffff;
+      border: 1px solid #d0d5dd;
+      border-radius: 12px;
       padding: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     }
 
     section h2 {
-      font-size: 1.4rem;
-      margin-bottom: 12px;
+      font-size: 1.3rem;
+      margin-bottom: 10px;
     }
 
     .subtle {
-      color: var(--muted);
+      color: #667085;
       font-size: 0.95rem;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .grid-3 {
       display: grid;
-      gap: 16px;
+      gap: 14px;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
 
@@ -91,46 +75,33 @@
     select,
     button,
     textarea {
-      background: var(--panel-alt);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
       padding: 10px 12px;
       font-size: 0.95rem;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      outline: 2px solid var(--accent);
-      outline-offset: 1px;
     }
 
     button {
       cursor: pointer;
       font-weight: 600;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 14px rgba(76, 156, 255, 0.2);
     }
 
     .btn-accent {
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #06131b;
+      background: #2563eb;
+      color: #ffffff;
       border: none;
     }
 
     .btn-outline {
-      border-color: var(--accent-strong);
-      color: var(--accent);
+      background: #ffffff;
+      border-color: #2563eb;
+      color: #1d4ed8;
     }
 
     .btn-danger {
-      border-color: var(--danger);
-      color: var(--danger);
+      background: #ffffff;
+      border-color: #dc2626;
+      color: #b91c1c;
     }
 
     .toolbar {
@@ -157,31 +128,25 @@
     }
 
     thead th {
-      position: sticky;
-      top: 0;
-      background: #1f2435;
-      z-index: 1;
+      background: #f2f4f7;
       text-align: left;
-      padding: 12px;
-      border-bottom: 1px solid var(--border);
+      padding: 10px;
+      border-bottom: 1px solid #d0d5dd;
     }
 
     tbody td {
-      padding: 10px 12px;
-      border-bottom: 1px solid rgba(42, 50, 71, 0.6);
-    }
-
-    tbody tr:hover {
-      background: rgba(79, 156, 255, 0.08);
+      padding: 10px;
+      border-bottom: 1px solid #eaecf0;
     }
 
     .table-wrap {
       overflow-x: auto;
-      border-radius: 12px;
-      border: 1px solid var(--border);
+      border-radius: 10px;
+      border: 1px solid #eaecf0;
     }
 
-    .totals {
+    .totals,
+    .summary-grid {
       display: grid;
       gap: 12px;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -189,32 +154,21 @@
     }
 
     .card {
-      background: #171c2a;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
+      border: 1px dashed #d0d5dd;
+      border-radius: 10px;
+      padding: 12px;
+      background: #f8fafc;
     }
 
     .card .label {
-      color: var(--muted);
+      color: #667085;
       font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
     }
 
     .card .value {
-      font-size: 1.4rem;
+      font-size: 1.25rem;
       font-weight: 700;
       margin-top: 6px;
-      color: var(--success);
-    }
-
-    .card .value.warning {
-      color: var(--warning);
-    }
-
-    .card .value.primary {
-      color: var(--accent);
     }
 
     .row-actions {
@@ -224,7 +178,7 @@
 
     .note {
       font-size: 0.9rem;
-      color: var(--muted);
+      color: #667085;
       margin-top: 12px;
     }
 
@@ -240,19 +194,9 @@
       height: 18px;
     }
 
-    .summary-grid {
-      display: grid;
-      gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    }
-
-    .summary-grid .card {
-      border-color: rgba(76, 156, 255, 0.4);
-    }
-
     footer {
       text-align: center;
-      color: var(--muted);
+      color: #667085;
       padding-bottom: 24px;
     }
 
@@ -265,25 +209,25 @@
 </head>
 <body>
   <header>
-    <h1>Daily Net Profit Tracker</h1>
-    <p>Manage per-order profits, fixed expenses, and daily sales in one dashboard.</p>
+    <h1>Günlük Net Kar Takibi</h1>
+    <p>Porsiyon kârları, sabit giderler ve günlük satışları tek ekranda takip edin.</p>
   </header>
 
   <main>
     <section>
-      <h2>1) Profit Settings</h2>
-      <p class="subtle">Adjust profit per order to instantly update all calculations.</p>
+      <h2>1) Ayarlar</h2>
+      <p class="subtle">Porsiyon başı kârları güncelleyerek tüm hesaplamaları anında yenileyin.</p>
       <div class="grid-3">
         <label>
-          Portion Profit (TL)
+          Porsiyon Kârı (TL)
           <input type="number" step="0.01" id="portionProfit" />
         </label>
         <label>
-          500g Profit (TL)
+          500g Kârı (TL)
           <input type="number" step="0.01" id="profit500g" />
         </label>
         <label>
-          1kg Profit (TL)
+          1kg Kârı (TL)
           <input type="number" step="0.01" id="profit1kg" />
         </label>
       </div>
@@ -292,20 +236,20 @@
     <section>
       <div class="toolbar">
         <div>
-          <h2>2) Monthly Fixed Expenses</h2>
-          <p class="subtle">Track monthly costs and allocate a daily fixed expense.</p>
+          <h2>2) Aylık Sabit Giderler</h2>
+          <p class="subtle">Aylık giderleri yönetin ve günlük sabit gideri hesaplayın.</p>
         </div>
         <div class="group">
-          <button class="btn-outline" id="addExpense">+ Add Expense</button>
+          <button class="btn-outline" id="addExpense">+ Gider Ekle</button>
         </div>
       </div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th style="width: 55%">Expense Name</th>
-              <th style="width: 25%">Amount (TL)</th>
-              <th>Actions</th>
+              <th style="width: 55%">Gider Adı</th>
+              <th style="width: 25%">Tutar (TL)</th>
+              <th>İşlemler</th>
             </tr>
           </thead>
           <tbody id="expenseBody"></tbody>
@@ -313,30 +257,30 @@
       </div>
       <div class="grid-3" style="margin-top: 16px;">
         <label>
-          Month
+          Ay
           <select id="monthSelect"></select>
         </label>
         <label>
-          Year
+          Yıl
           <input type="number" id="yearInput" min="2000" max="2100" />
         </label>
         <label>
-          Days in Month
+          Ayın Gün Sayısı
           <input type="number" id="daysInput" min="1" max="31" />
         </label>
       </div>
       <div class="toggle" style="margin-top: 12px;">
         <input type="checkbox" id="manualDays" />
-        <span>Manually override days in month</span>
+        <span>Ayın gün sayısını manuel belirle</span>
       </div>
       <div class="totals">
         <div class="card">
-          <div class="label">Total Monthly Fixed Expenses</div>
-          <div class="value warning" id="totalMonthly">0 TL</div>
+          <div class="label">Toplam Aylık Sabit Gider</div>
+          <div class="value" id="totalMonthly">0 TL</div>
         </div>
         <div class="card">
-          <div class="label">Daily Fixed Expense</div>
-          <div class="value primary" id="dailyFixed">0 TL</div>
+          <div class="label">Günlük Sabit Gider</div>
+          <div class="value" id="dailyFixed">0 TL</div>
         </div>
       </div>
     </section>
@@ -344,50 +288,50 @@
     <section>
       <div class="toolbar">
         <div>
-          <h2>3) Daily Sales Entries</h2>
-          <p class="subtle">Enter daily order quantities to see gross and real net profit.</p>
+          <h2>3) Günlük Satışlar</h2>
+          <p class="subtle">Günlük satış adetlerini girerek brüt ve net kârı görün.</p>
         </div>
         <div class="group">
-          <button class="btn-outline" id="addEntry">+ Add Day</button>
+          <button class="btn-outline" id="addEntry">+ Gün Ekle</button>
         </div>
       </div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th style="width: 20%">Date</th>
-              <th>Portion Qty</th>
-              <th>500g Qty</th>
-              <th>1kg Qty</th>
-              <th>Daily Gross Net (TL)</th>
-              <th>Daily Real Net (TL)</th>
-              <th>Actions</th>
+              <th style="width: 20%">Tarih</th>
+              <th>Porsiyon Adet</th>
+              <th>500g Adet</th>
+              <th>1kg Adet</th>
+              <th>Günlük Brüt Net (TL)</th>
+              <th>Günlük Gerçek Net (TL)</th>
+              <th>İşlemler</th>
             </tr>
           </thead>
           <tbody id="entryBody"></tbody>
         </table>
       </div>
-      <p class="note">Daily real net subtracts the current daily fixed expense.</p>
+      <p class="note">Günlük gerçek net, güncel günlük sabit giderin düşülmüş halidir.</p>
     </section>
 
     <section>
-      <h2>4) Summary</h2>
+      <h2>4) Özet</h2>
       <div class="toggle" style="margin: 12px 0 16px;">
         <input type="checkbox" id="allocateOnlyEntered" />
-        <span>Allocate fixed expenses only for entered days</span>
+        <span>Sabit gideri sadece girilen günlere dağıt</span>
       </div>
       <div class="summary-grid">
         <div class="card">
-          <div class="label">Total Gross Net</div>
+          <div class="label">Toplam Brüt Net</div>
           <div class="value" id="totalGross">0 TL</div>
         </div>
         <div class="card">
-          <div class="label">Total Fixed Expense Allocated</div>
-          <div class="value warning" id="totalFixedAllocated">0 TL</div>
+          <div class="label">Dağıtılan Toplam Sabit Gider</div>
+          <div class="value" id="totalFixedAllocated">0 TL</div>
         </div>
         <div class="card">
-          <div class="label">Total Real Net</div>
-          <div class="value primary" id="totalReal">0 TL</div>
+          <div class="label">Toplam Gerçek Net</div>
+          <div class="value" id="totalReal">0 TL</div>
         </div>
       </div>
     </section>
@@ -395,51 +339,54 @@
     <section>
       <div class="toolbar">
         <div>
-          <h2>5) Data Tools</h2>
-          <p class="subtle">Your data is saved locally in this browser. Use export/import for backup.</p>
+          <h2>5) Veri Araçları</h2>
+          <p class="subtle">Veriler bu tarayıcıda yerel olarak saklanır. Yedeklemek için dışa aktarın.</p>
         </div>
         <div class="group">
-          <button class="btn-accent" id="exportData">Export JSON</button>
+          <button class="btn-accent" id="exportData">JSON Dışa Aktar</button>
           <label class="btn-outline" style="cursor: pointer;">
-            Import JSON
+            JSON İçe Aktar
             <input type="file" id="importData" accept="application/json" hidden />
           </label>
-          <button class="btn-danger" id="resetData">Reset</button>
+          <button class="btn-danger" id="resetData">Tüm Verileri Sıfırla</button>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    Built for daily net profit tracking.
+    Günlük net kâr takibi için hazırlanmıştır.
   </footer>
 
   <script>
-    const STORAGE_KEY = "daily-net-profit-tracker";
+    const STORAGE_KEY = "gunluk_net_kar_v1";
+    const SAVE_DEBOUNCE_MS = 150;
 
     const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+      "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
     ];
 
-    const defaultData = {
+    const defaultState = {
       settings: {
         portionProfit: 140,
         profit500g: 140,
         profit1kg: 235
       },
+      month: {
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1,
+        daysInMonth: null
+      },
+      allocateOnlyEnteredDays: true,
       expenses: [
-        { id: crypto.randomUUID(), name: "Rent", amount: 0 }
+        { name: "Kira", amount: 0 }
       ],
-      entries: [],
-      month: new Date().getMonth() + 1,
-      year: new Date().getFullYear(),
-      manualDays: false,
-      daysInMonth: null,
-      allocateOnlyEntered: true
+      entries: []
     };
 
-    let data = loadData();
+    let state = loadState();
+    let saveTimer;
 
     const elements = {
       portionProfit: document.getElementById("portionProfit"),
@@ -464,28 +411,49 @@
       resetData: document.getElementById("resetData")
     };
 
-    function loadData() {
+    function loadState() {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return structuredClone(defaultData);
+      if (!raw) {
+        const freshState = structuredClone(defaultState);
+        persistState(freshState);
+        return freshState;
+      }
       try {
         const parsed = JSON.parse(raw);
-        return {
-          ...structuredClone(defaultData),
-          ...parsed,
-          settings: {
-            ...structuredClone(defaultData.settings),
-            ...(parsed.settings || {})
-          },
-          expenses: parsed.expenses || structuredClone(defaultData.expenses),
-          entries: parsed.entries || []
-        };
+        const merged = mergeState(parsed);
+        persistState(merged);
+        return merged;
       } catch (error) {
-        return structuredClone(defaultData);
+        const freshState = structuredClone(defaultState);
+        persistState(freshState);
+        return freshState;
       }
     }
 
-    function saveData() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    function mergeState(parsed) {
+      return {
+        ...structuredClone(defaultState),
+        ...parsed,
+        settings: {
+          ...structuredClone(defaultState.settings),
+          ...(parsed.settings || {})
+        },
+        month: {
+          ...structuredClone(defaultState.month),
+          ...(parsed.month || {})
+        },
+        expenses: Array.isArray(parsed.expenses) ? parsed.expenses : structuredClone(defaultState.expenses),
+        entries: Array.isArray(parsed.entries) ? parsed.entries : []
+      };
+    }
+
+    function persistState(nextState) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
+    }
+
+    function scheduleSave() {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => persistState(state), SAVE_DEBOUNCE_MS);
     }
 
     function formatCurrency(value) {
@@ -496,12 +464,11 @@
       return new Date(year, month, 0).getDate();
     }
 
-    function ensureDaysInMonth() {
-      if (!data.manualDays) {
-        data.daysInMonth = computeDaysInMonth(data.year, data.month);
-      } else if (!data.daysInMonth) {
-        data.daysInMonth = 30;
+    function getActiveDaysInMonth() {
+      if (state.month.daysInMonth === null) {
+        return computeDaysInMonth(state.month.year, state.month.month);
       }
+      return Number(state.month.daysInMonth) || computeDaysInMonth(state.month.year, state.month.month);
     }
 
     function renderMonthSelect() {
@@ -511,20 +478,20 @@
     }
 
     function renderSettings() {
-      elements.portionProfit.value = data.settings.portionProfit;
-      elements.profit500g.value = data.settings.profit500g;
-      elements.profit1kg.value = data.settings.profit1kg;
+      elements.portionProfit.value = state.settings.portionProfit;
+      elements.profit500g.value = state.settings.profit500g;
+      elements.profit1kg.value = state.settings.profit1kg;
     }
 
     function renderExpenses() {
-      elements.expenseBody.innerHTML = data.expenses
+      elements.expenseBody.innerHTML = state.expenses
         .map(
-          (expense) => `
-            <tr data-id="${expense.id}">
+          (expense, index) => `
+            <tr data-index="${index}">
               <td><input type="text" value="${expense.name}" data-field="name" /></td>
               <td><input type="number" step="0.01" value="${expense.amount}" data-field="amount" /></td>
               <td class="row-actions">
-                <button class="btn-danger" data-action="remove-expense">Remove</button>
+                <button class="btn-danger" data-action="remove-expense">Sil</button>
               </td>
             </tr>
           `
@@ -533,10 +500,10 @@
     }
 
     function renderEntries() {
-      elements.entryBody.innerHTML = data.entries
+      elements.entryBody.innerHTML = state.entries
         .map(
-          (entry) => `
-            <tr data-id="${entry.id}">
+          (entry, index) => `
+            <tr data-index="${index}">
               <td><input type="date" value="${entry.date}" data-field="date" /></td>
               <td><input type="number" min="0" value="${entry.portionQty}" data-field="portionQty" /></td>
               <td><input type="number" min="0" value="${entry.qty500g}" data-field="qty500g" /></td>
@@ -544,7 +511,7 @@
               <td>${formatCurrency(calculateDailyGross(entry))}</td>
               <td>${formatCurrency(calculateDailyReal(entry))}</td>
               <td class="row-actions">
-                <button class="btn-danger" data-action="remove-entry">Remove</button>
+                <button class="btn-danger" data-action="remove-entry">Sil</button>
               </td>
             </tr>
           `
@@ -554,9 +521,9 @@
 
     function calculateDailyGross(entry) {
       return (
-        entry.portionQty * data.settings.portionProfit +
-        entry.qty500g * data.settings.profit500g +
-        entry.qty1kg * data.settings.profit1kg
+        entry.portionQty * state.settings.portionProfit +
+        entry.qty500g * state.settings.profit500g +
+        entry.qty1kg * state.settings.profit1kg
       );
     }
 
@@ -565,16 +532,16 @@
     }
 
     function getTotalMonthlyExpenses() {
-      return data.expenses.reduce((total, expense) => total + Number(expense.amount || 0), 0);
+      return state.expenses.reduce((total, expense) => total + Number(expense.amount || 0), 0);
     }
 
     function getDailyFixedExpense() {
-      const days = Math.max(1, data.daysInMonth || computeDaysInMonth(data.year, data.month));
+      const days = Math.max(1, getActiveDaysInMonth());
       return getTotalMonthlyExpenses() / days;
     }
 
     function getEnteredDayCount() {
-      return data.entries.filter((entry) => {
+      return state.entries.filter((entry) => {
         const hasQty = entry.portionQty || entry.qty500g || entry.qty1kg;
         return entry.date || hasQty;
       }).length;
@@ -583,9 +550,9 @@
     function renderTotals() {
       const totalMonthly = getTotalMonthlyExpenses();
       const dailyFixed = getDailyFixedExpense();
-      const totalGross = data.entries.reduce((sum, entry) => sum + calculateDailyGross(entry), 0);
+      const totalGross = state.entries.reduce((sum, entry) => sum + calculateDailyGross(entry), 0);
       const enteredDays = getEnteredDayCount();
-      const totalFixedAllocated = data.allocateOnlyEntered
+      const totalFixedAllocated = state.allocateOnlyEnteredDays
         ? dailyFixed * enteredDays
         : totalMonthly;
       const totalReal = totalGross - totalFixedAllocated;
@@ -598,79 +565,78 @@
     }
 
     function syncMonthYear() {
-      elements.monthSelect.value = data.month;
-      elements.yearInput.value = data.year;
-      elements.manualDays.checked = data.manualDays;
-      ensureDaysInMonth();
-      elements.daysInput.value = data.daysInMonth;
-      elements.daysInput.disabled = !data.manualDays;
+      elements.monthSelect.value = state.month.month;
+      elements.yearInput.value = state.month.year;
+      const isManualDays = state.month.daysInMonth !== null;
+      elements.manualDays.checked = isManualDays;
+      elements.daysInput.value = isManualDays ? state.month.daysInMonth : getActiveDaysInMonth();
+      elements.daysInput.disabled = !isManualDays;
     }
 
     function syncToggle() {
-      elements.allocateOnlyEntered.checked = data.allocateOnlyEntered;
+      elements.allocateOnlyEntered.checked = state.allocateOnlyEnteredDays;
     }
 
     function addExpenseRow() {
-      data.expenses.push({ id: crypto.randomUUID(), name: "", amount: 0 });
-      saveData();
+      state.expenses.push({ name: "", amount: 0 });
+      scheduleSave();
       renderExpenses();
       renderTotals();
     }
 
     function addEntryRow() {
-      data.entries.push({
-        id: crypto.randomUUID(),
+      state.entries.push({
         date: "",
         portionQty: 0,
         qty500g: 0,
         qty1kg: 0
       });
-      saveData();
+      scheduleSave();
       renderEntries();
       renderTotals();
     }
 
-    function updateExpense(id, field, value) {
-      const expense = data.expenses.find((item) => item.id === id);
+    function updateExpense(index, field, value) {
+      const expense = state.expenses[index];
       if (!expense) return;
       expense[field] = field === "amount" ? Number(value) : value;
-      saveData();
+      scheduleSave();
       renderTotals();
     }
 
-    function updateEntry(id, field, value) {
-      const entry = data.entries.find((item) => item.id === id);
+    function updateEntry(index, field, value) {
+      const entry = state.entries[index];
       if (!entry) return;
       if (["portionQty", "qty500g", "qty1kg"].includes(field)) {
         entry[field] = Number(value);
       } else {
         entry[field] = value;
       }
-      saveData();
+      scheduleSave();
       renderEntries();
       renderTotals();
     }
 
-    function removeExpense(id) {
-      data.expenses = data.expenses.filter((item) => item.id !== id);
-      saveData();
+    function removeExpense(index) {
+      state.expenses.splice(index, 1);
+      scheduleSave();
       renderExpenses();
       renderTotals();
     }
 
-    function removeEntry(id) {
-      data.entries = data.entries.filter((item) => item.id !== id);
-      saveData();
+    function removeEntry(index) {
+      state.entries.splice(index, 1);
+      scheduleSave();
       renderEntries();
       renderTotals();
     }
 
     function handleExport() {
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "daily-net-profit-data.json";
+      link.download = "gunluk-net-kar-verisi.json";
       link.click();
       URL.revokeObjectURL(url);
     }
@@ -682,21 +648,11 @@
       reader.onload = () => {
         try {
           const parsed = JSON.parse(reader.result);
-          data = {
-            ...structuredClone(defaultData),
-            ...parsed,
-            settings: {
-              ...structuredClone(defaultData.settings),
-              ...(parsed.settings || {})
-            },
-            expenses: parsed.expenses || structuredClone(defaultData.expenses),
-            entries: parsed.entries || []
-          };
-          ensureDaysInMonth();
-          saveData();
+          state = mergeState(parsed);
+          persistState(state);
           initialize();
         } catch (error) {
-          alert("Invalid JSON file.");
+          alert("Geçersiz JSON dosyası.");
         }
       };
       reader.readAsText(file);
@@ -704,10 +660,9 @@
     }
 
     function handleReset() {
-      if (!confirm("Reset all data? This cannot be undone.")) return;
-      data = structuredClone(defaultData);
-      ensureDaysInMonth();
-      saveData();
+      if (!confirm("Tüm veriler sıfırlansın mı? Bu işlem geri alınamaz.")) return;
+      state = structuredClone(defaultState);
+      persistState(state);
       initialize();
     }
 
@@ -721,22 +676,22 @@
     }
 
     elements.portionProfit.addEventListener("input", (event) => {
-      data.settings.portionProfit = Number(event.target.value);
-      saveData();
+      state.settings.portionProfit = Number(event.target.value);
+      scheduleSave();
       renderEntries();
       renderTotals();
     });
 
     elements.profit500g.addEventListener("input", (event) => {
-      data.settings.profit500g = Number(event.target.value);
-      saveData();
+      state.settings.profit500g = Number(event.target.value);
+      scheduleSave();
       renderEntries();
       renderTotals();
     });
 
     elements.profit1kg.addEventListener("input", (event) => {
-      data.settings.profit1kg = Number(event.target.value);
-      saveData();
+      state.settings.profit1kg = Number(event.target.value);
+      scheduleSave();
       renderEntries();
       renderTotals();
     });
@@ -746,13 +701,13 @@
       if (!row) return;
       const field = event.target.dataset.field;
       if (!field) return;
-      updateExpense(row.dataset.id, field, event.target.value);
+      updateExpense(Number(row.dataset.index), field, event.target.value);
     });
 
     elements.expenseBody.addEventListener("click", (event) => {
       if (event.target.dataset.action === "remove-expense") {
         const row = event.target.closest("tr");
-        if (row) removeExpense(row.dataset.id);
+        if (row) removeExpense(Number(row.dataset.index));
       }
     });
 
@@ -761,13 +716,13 @@
       if (!row) return;
       const field = event.target.dataset.field;
       if (!field) return;
-      updateEntry(row.dataset.id, field, event.target.value);
+      updateEntry(Number(row.dataset.index), field, event.target.value);
     });
 
     elements.entryBody.addEventListener("click", (event) => {
       if (event.target.dataset.action === "remove-entry") {
         const row = event.target.closest("tr");
-        if (row) removeEntry(row.dataset.id);
+        if (row) removeEntry(Number(row.dataset.index));
       }
     });
 
@@ -775,38 +730,41 @@
     elements.addEntry.addEventListener("click", addEntryRow);
 
     elements.monthSelect.addEventListener("change", (event) => {
-      data.month = Number(event.target.value);
-      ensureDaysInMonth();
-      saveData();
+      state.month.month = Number(event.target.value);
+      if (state.month.daysInMonth !== null) {
+        state.month.daysInMonth = computeDaysInMonth(state.month.year, state.month.month);
+      }
+      scheduleSave();
       syncMonthYear();
       renderTotals();
     });
 
     elements.yearInput.addEventListener("input", (event) => {
-      data.year = Number(event.target.value);
-      ensureDaysInMonth();
-      saveData();
+      state.month.year = Number(event.target.value);
+      if (state.month.daysInMonth !== null) {
+        state.month.daysInMonth = computeDaysInMonth(state.month.year, state.month.month);
+      }
+      scheduleSave();
       syncMonthYear();
       renderTotals();
     });
 
     elements.manualDays.addEventListener("change", (event) => {
-      data.manualDays = event.target.checked;
-      ensureDaysInMonth();
-      saveData();
+      state.month.daysInMonth = event.target.checked ? getActiveDaysInMonth() : null;
+      scheduleSave();
       syncMonthYear();
       renderTotals();
     });
 
     elements.daysInput.addEventListener("input", (event) => {
-      data.daysInMonth = Number(event.target.value);
-      saveData();
+      state.month.daysInMonth = Number(event.target.value);
+      scheduleSave();
       renderTotals();
     });
 
     elements.allocateOnlyEntered.addEventListener("change", (event) => {
-      data.allocateOnlyEntered = event.target.checked;
-      saveData();
+      state.allocateOnlyEnteredDays = event.target.checked;
+      scheduleSave();
       renderTotals();
     });
 
@@ -815,7 +773,6 @@
     elements.resetData.addEventListener("click", handleReset);
 
     renderMonthSelect();
-    ensureDaysInMonth();
     initialize();
   </script>
 </body>

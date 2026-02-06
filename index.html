@@ -5,6 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Günlük Net Kar Takibi</title>
   <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f141a;
+      --panel: #171d27;
+      --panel2: #1d2430;
+      --text: #e6e8ec;
+      --muted: #a6b0bb;
+      --border: #2b3545;
+      --accent: #6c8cff;
+      --accent2: #4dd2ff;
+      --good: #2dd4a7;
+      --bad: #f87171;
+      --warn: #f59e0b;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -12,50 +27,69 @@
     }
 
     body {
-      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-      background: #f4f6fb;
-      color: #101828;
-      line-height: 1.5;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #151b25 0%, var(--bg) 55%);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
     }
 
     header {
-      padding: 28px 24px 12px;
+      padding: 32px 24px 16px;
       text-align: center;
     }
 
     header h1 {
-      font-size: 2rem;
+      font-size: 2.2rem;
       margin-bottom: 8px;
+      font-weight: 700;
     }
 
     header p {
-      color: #475467;
+      color: var(--muted);
     }
 
     main {
-      max-width: 1200px;
-      margin: 0 auto 40px;
+      max-width: 1240px;
+      margin: 0 auto 48px;
       padding: 0 24px;
       display: grid;
       gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
     }
 
     section {
-      background: #ffffff;
-      border: 1px solid #d0d5dd;
-      border-radius: 12px;
-      padding: 20px;
+      background: linear-gradient(135deg, var(--panel) 0%, var(--panel2) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 18px 30px rgba(8, 12, 18, 0.35);
     }
 
     section h2 {
       font-size: 1.3rem;
       margin-bottom: 10px;
+      font-weight: 700;
+      position: relative;
+      padding-left: 14px;
+    }
+
+    section h2::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 70%;
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
     }
 
     .subtle {
-      color: #667085;
+      color: var(--muted);
       font-size: 0.95rem;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .grid-3 {
@@ -75,33 +109,58 @@
     select,
     button,
     textarea {
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
       padding: 10px 12px;
       font-size: 0.95rem;
+      background: #11161e;
+      color: var(--text);
+    }
+
+    input::placeholder {
+      color: #7c8796;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid color-mix(in srgb, var(--accent) 80%, transparent);
+      outline-offset: 2px;
+    }
+
+    input[type="number"] {
+      text-align: right;
     }
 
     button {
       cursor: pointer;
       font-weight: 600;
+      border-radius: 999px;
+      padding: 10px 16px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(4, 10, 20, 0.35);
     }
 
     .btn-accent {
-      background: #2563eb;
-      color: #ffffff;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0b111b;
       border: none;
     }
 
     .btn-outline {
-      background: #ffffff;
-      border-color: #2563eb;
-      color: #1d4ed8;
+      background: #121924;
+      border-color: #2f3b50;
+      color: var(--text);
     }
 
     .btn-danger {
-      background: #ffffff;
-      border-color: #dc2626;
-      color: #b91c1c;
+      background: rgba(248, 113, 113, 0.15);
+      border-color: rgba(248, 113, 113, 0.6);
+      color: var(--bad);
     }
 
     .toolbar {
@@ -128,21 +187,35 @@
     }
 
     thead th {
-      background: #f2f4f7;
+      position: sticky;
+      top: 0;
+      background: #1b2330;
       text-align: left;
       padding: 10px;
-      border-bottom: 1px solid #d0d5dd;
+      border-bottom: 1px solid var(--border);
+      z-index: 1;
     }
 
-    tbody td {
+    tbody td,
+    tfoot td {
       padding: 10px;
-      border-bottom: 1px solid #eaecf0;
+      border-bottom: 1px solid rgba(46, 58, 76, 0.6);
+    }
+
+    tbody tr:hover {
+      background: rgba(108, 140, 255, 0.08);
+    }
+
+    tfoot tr {
+      background: rgba(108, 140, 255, 0.12);
+      font-weight: 700;
     }
 
     .table-wrap {
-      overflow-x: auto;
-      border-radius: 10px;
-      border: 1px solid #eaecf0;
+      overflow: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      max-height: 320px;
     }
 
     .totals,
@@ -154,19 +227,19 @@
     }
 
     .card {
-      border: 1px dashed #d0d5dd;
-      border-radius: 10px;
-      padding: 12px;
-      background: #f8fafc;
+      border: 1px solid rgba(108, 140, 255, 0.2);
+      border-radius: 12px;
+      padding: 14px;
+      background: #141b26;
     }
 
     .card .label {
-      color: #667085;
+      color: var(--muted);
       font-size: 0.85rem;
     }
 
     .card .value {
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       font-weight: 700;
       margin-top: 6px;
     }
@@ -178,7 +251,7 @@
 
     .note {
       font-size: 0.9rem;
-      color: #667085;
+      color: var(--muted);
       margin-top: 12px;
     }
 
@@ -196,13 +269,43 @@
 
     footer {
       text-align: center;
-      color: #667085;
+      color: var(--muted);
       padding-bottom: 24px;
     }
 
-    @media (max-width: 840px) {
+    .span-2 {
+      grid-column: 1 / -1;
+    }
+
+    .value.good {
+      color: var(--good);
+    }
+
+    .value.bad {
+      color: var(--bad);
+    }
+
+    .value.warn {
+      color: var(--warn);
+    }
+
+    .cell-right {
+      text-align: right;
+    }
+
+    .helper {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 900px) {
       main {
         padding: 0 16px;
+      }
+
+      .table-wrap {
+        max-height: 360px;
       }
     }
   </style>
@@ -248,11 +351,12 @@
           <thead>
             <tr>
               <th style="width: 55%">Gider Adı</th>
-              <th style="width: 25%">Tutar (TL)</th>
+              <th style="width: 25%" class="cell-right">Tutar (TL)</th>
               <th>İşlemler</th>
             </tr>
           </thead>
           <tbody id="expenseBody"></tbody>
+          <tfoot id="expenseFoot"></tfoot>
         </table>
       </div>
       <div class="grid-3" style="margin-top: 16px;">
@@ -276,16 +380,16 @@
       <div class="totals">
         <div class="card">
           <div class="label">Toplam Aylık Sabit Gider</div>
-          <div class="value" id="totalMonthly">0 TL</div>
+          <div class="value warn" id="totalMonthly">0 TL</div>
         </div>
         <div class="card">
           <div class="label">Günlük Sabit Gider</div>
-          <div class="value" id="dailyFixed">0 TL</div>
+          <div class="value warn" id="dailyFixed">0 TL</div>
         </div>
       </div>
     </section>
 
-    <section>
+    <section class="span-2">
       <div class="toolbar">
         <div>
           <h2>3) Günlük Satışlar</h2>
@@ -300,21 +404,22 @@
           <thead>
             <tr>
               <th style="width: 20%">Tarih</th>
-              <th>Porsiyon Adet</th>
-              <th>500g Adet</th>
-              <th>1kg Adet</th>
-              <th>Günlük Brüt Net (TL)</th>
-              <th>Günlük Gerçek Net (TL)</th>
+              <th class="cell-right">Porsiyon Adet</th>
+              <th class="cell-right">500g Adet</th>
+              <th class="cell-right">1kg Adet</th>
+              <th class="cell-right">Günlük Brüt Net (TL)</th>
+              <th class="cell-right">Günlük Gerçek Net (TL)</th>
               <th>İşlemler</th>
             </tr>
           </thead>
           <tbody id="entryBody"></tbody>
+          <tfoot id="entryFoot"></tfoot>
         </table>
       </div>
       <p class="note">Günlük gerçek net, güncel günlük sabit giderin düşülmüş halidir.</p>
     </section>
 
-    <section>
+    <section class="span-2">
       <h2>4) Özet</h2>
       <div class="toggle" style="margin: 12px 0 16px;">
         <input type="checkbox" id="allocateOnlyEntered" />
@@ -327,7 +432,7 @@
         </div>
         <div class="card">
           <div class="label">Dağıtılan Toplam Sabit Gider</div>
-          <div class="value" id="totalFixedAllocated">0 TL</div>
+          <div class="value warn" id="totalFixedAllocated">0 TL</div>
         </div>
         <div class="card">
           <div class="label">Toplam Gerçek Net</div>
@@ -336,7 +441,7 @@
       </div>
     </section>
 
-    <section>
+    <section class="span-2">
       <div class="toolbar">
         <div>
           <h2>5) Veri Araçları</h2>
@@ -393,6 +498,7 @@
       profit500g: document.getElementById("profit500g"),
       profit1kg: document.getElementById("profit1kg"),
       expenseBody: document.getElementById("expenseBody"),
+      expenseFoot: document.getElementById("expenseFoot"),
       addExpense: document.getElementById("addExpense"),
       monthSelect: document.getElementById("monthSelect"),
       yearInput: document.getElementById("yearInput"),
@@ -401,6 +507,7 @@
       totalMonthly: document.getElementById("totalMonthly"),
       dailyFixed: document.getElementById("dailyFixed"),
       entryBody: document.getElementById("entryBody"),
+      entryFoot: document.getElementById("entryFoot"),
       addEntry: document.getElementById("addEntry"),
       allocateOnlyEntered: document.getElementById("allocateOnlyEntered"),
       totalGross: document.getElementById("totalGross"),
@@ -489,7 +596,7 @@
           (expense, index) => `
             <tr data-index="${index}">
               <td><input type="text" value="${expense.name}" data-field="name" /></td>
-              <td><input type="number" step="0.01" value="${expense.amount}" data-field="amount" /></td>
+              <td class="cell-right"><input type="number" step="0.01" value="${expense.amount}" data-field="amount" /></td>
               <td class="row-actions">
                 <button class="btn-danger" data-action="remove-expense">Sil</button>
               </td>
@@ -497,26 +604,32 @@
           `
         )
         .join("");
+      renderExpenseFooter();
     }
 
     function renderEntries() {
       elements.entryBody.innerHTML = state.entries
         .map(
-          (entry, index) => `
+          (entry, index) => {
+            const dailyReal = calculateDailyReal(entry);
+            const realClass = dailyReal >= 0 ? "good" : "bad";
+            return `
             <tr data-index="${index}">
               <td><input type="date" value="${entry.date}" data-field="date" /></td>
-              <td><input type="number" min="0" value="${entry.portionQty}" data-field="portionQty" /></td>
-              <td><input type="number" min="0" value="${entry.qty500g}" data-field="qty500g" /></td>
-              <td><input type="number" min="0" value="${entry.qty1kg}" data-field="qty1kg" /></td>
-              <td>${formatCurrency(calculateDailyGross(entry))}</td>
-              <td>${formatCurrency(calculateDailyReal(entry))}</td>
+              <td class="cell-right"><input type="number" min="0" value="${entry.portionQty}" data-field="portionQty" /></td>
+              <td class="cell-right"><input type="number" min="0" value="${entry.qty500g}" data-field="qty500g" /></td>
+              <td class="cell-right"><input type="number" min="0" value="${entry.qty1kg}" data-field="qty1kg" /></td>
+              <td class="cell-right">${formatCurrency(calculateDailyGross(entry))}</td>
+              <td class="cell-right value ${realClass}">${formatCurrency(dailyReal)}</td>
               <td class="row-actions">
                 <button class="btn-danger" data-action="remove-entry">Sil</button>
               </td>
             </tr>
-          `
+          `;
+          }
         )
         .join("");
+      renderEntryFooter();
     }
 
     function calculateDailyGross(entry) {
@@ -562,6 +675,40 @@
       elements.totalGross.textContent = formatCurrency(totalGross);
       elements.totalFixedAllocated.textContent = formatCurrency(totalFixedAllocated);
       elements.totalReal.textContent = formatCurrency(totalReal);
+      elements.totalReal.classList.toggle("good", totalReal >= 0);
+      elements.totalReal.classList.toggle("bad", totalReal < 0);
+    }
+
+    function renderExpenseFooter() {
+      const totalMonthly = getTotalMonthlyExpenses();
+      elements.expenseFoot.innerHTML = `
+        <tr>
+          <td>Toplam</td>
+          <td class="cell-right">${formatCurrency(totalMonthly)}</td>
+          <td></td>
+        </tr>
+      `;
+    }
+
+    function renderEntryFooter() {
+      const totalPortion = state.entries.reduce((sum, entry) => sum + Number(entry.portionQty || 0), 0);
+      const total500g = state.entries.reduce((sum, entry) => sum + Number(entry.qty500g || 0), 0);
+      const total1kg = state.entries.reduce((sum, entry) => sum + Number(entry.qty1kg || 0), 0);
+      const totalGross = state.entries.reduce((sum, entry) => sum + calculateDailyGross(entry), 0);
+      const totalReal = state.entries.reduce((sum, entry) => sum + calculateDailyReal(entry), 0);
+      const realClass = totalReal >= 0 ? "good" : "bad";
+
+      elements.entryFoot.innerHTML = `
+        <tr>
+          <td>Toplam</td>
+          <td class="cell-right">${totalPortion}</td>
+          <td class="cell-right">${total500g}</td>
+          <td class="cell-right">${total1kg}</td>
+          <td class="cell-right">${formatCurrency(totalGross)}</td>
+          <td class="cell-right value ${realClass}">${formatCurrency(totalReal)}</td>
+          <td></td>
+        </tr>
+      `;
     }
 
     function syncMonthYear() {
@@ -582,6 +729,7 @@
       scheduleSave();
       renderExpenses();
       renderTotals();
+      renderEntries();
     }
 
     function addEntryRow() {
@@ -602,6 +750,7 @@
       expense[field] = field === "amount" ? Number(value) : value;
       scheduleSave();
       renderTotals();
+      renderEntries();
     }
 
     function updateEntry(index, field, value) {
@@ -622,6 +771,7 @@
       scheduleSave();
       renderExpenses();
       renderTotals();
+      renderEntries();
     }
 
     function removeEntry(index) {
@@ -737,6 +887,7 @@
       scheduleSave();
       syncMonthYear();
       renderTotals();
+      renderEntries();
     });
 
     elements.yearInput.addEventListener("input", (event) => {
@@ -747,6 +898,7 @@
       scheduleSave();
       syncMonthYear();
       renderTotals();
+      renderEntries();
     });
 
     elements.manualDays.addEventListener("change", (event) => {
@@ -754,12 +906,14 @@
       scheduleSave();
       syncMonthYear();
       renderTotals();
+      renderEntries();
     });
 
     elements.daysInput.addEventListener("input", (event) => {
       state.month.daysInMonth = Number(event.target.value);
       scheduleSave();
       renderTotals();
+      renderEntries();
     });
 
     elements.allocateOnlyEntered.addEventListener("change", (event) => {

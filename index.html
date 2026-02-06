@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Günlük Net Kar Takibi</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f141a;
+      --panel: #171d27;
+      --panel2: #1d2430;
+      --text: #e6e8ec;
+      --muted: #a6b0bb;
+      --border: #2b3545;
+      --accent: #6c8cff;
+      --accent2: #4dd2ff;
+      --good: #2dd4a7;
+      --bad: #f87171;
+      --warn: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #151b25 0%, var(--bg) 55%);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    header {
+      padding: 32px 24px 16px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    header p {
+      color: var(--muted);
+    }
+
+    main {
+      max-width: 1240px;
+      margin: 0 auto 48px;
+      padding: 0 24px;
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    }
+
+    section {
+      background: linear-gradient(135deg, var(--panel) 0%, var(--panel2) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 18px 30px rgba(8, 12, 18, 0.35);
+    }
+
+    section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+      position: relative;
+      padding-left: 14px;
+    }
+
+    section h2::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 70%;
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    button,
+    textarea {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      background: #11161e;
+      color: var(--text);
+    }
+
+    input::placeholder {
+      color: #7c8796;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid color-mix(in srgb, var(--accent) 80%, transparent);
+      outline-offset: 2px;
+    }
+
+    input[type="number"] {
+      text-align: right;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 600;
+      border-radius: 999px;
+      padding: 10px 16px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(4, 10, 20, 0.35);
+    }
+
+    .btn-accent {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0b111b;
+      border: none;
+    }
+
+    .btn-outline {
+      background: #121924;
+      border-color: #2f3b50;
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: rgba(248, 113, 113, 0.15);
+      border-color: rgba(248, 113, 113, 0.6);
+      color: var(--bad);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .toolbar .group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      min-width: 640px;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background: #1b2330;
+      text-align: left;
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+      z-index: 1;
+    }
+
+    tbody td,
+    tfoot td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(46, 58, 76, 0.6);
+    }
+
+    tbody tr:hover {
+      background: rgba(108, 140, 255, 0.08);
+    }
+
+    tfoot tr {
+      background: rgba(108, 140, 255, 0.12);
+      font-weight: 700;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      max-height: 320px;
+    }
+
+    .totals,
+    .summary-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-top: 16px;
+    }
+
+    .card {
+      border: 1px solid rgba(108, 140, 255, 0.2);
+      border-radius: 12px;
+      padding: 14px;
+      background: #141b26;
+    }
+
+    .card .label {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .card .value {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    .toggle input {
+      width: 18px;
+      height: 18px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding-bottom: 24px;
+    }
+
+    .span-2 {
+      grid-column: 1 / -1;
+    }
+
+    .value.good {
+      color: var(--good);
+    }
+
+    .value.bad {
+      color: var(--bad);
+    }
+
+    .value.warn {
+      color: var(--warn);
+    }
+
+    .cell-right {
+      text-align: right;
+    }
+
+    .helper {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        padding: 0 16px;
+      }
+
+      .table-wrap {
+        max-height: 360px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Günlük Net Kar Takibi</h1>
+    <p>Porsiyon kârları, sabit giderler ve günlük satışları tek ekranda takip edin.</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>1) Ayarlar</h2>
+      <p class="subtle">Porsiyon başı kârları güncelleyerek tüm hesaplamaları anında yenileyin.</p>
+      <div class="grid-3">
+        <label>
+          Porsiyon Kârı (TL)
+          <input type="number" step="0.01" id="portionProfit" />
+        </label>
+        <label>
+          500g Kârı (TL)
+          <input type="number" step="0.01" id="profit500g" />
+        </label>
+        <label>
+          1kg Kârı (TL)
+          <input type="number" step="0.01" id="profit1kg" />
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <div class="toolbar">
+        <div>
+          <h2>2) Aylık Sabit Giderler</h2>
+          <p class="subtle">Aylık giderleri yönetin ve günlük sabit gideri hesaplayın.</p>
+        </div>
+        <div class="group">
+          <button class="btn-outline" id="addExpense">+ Gider Ekle</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 55%">Gider Adı</th>
+              <th style="width: 25%" class="cell-right">Tutar (TL)</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody id="expenseBody"></tbody>
+          <tfoot id="expenseFoot"></tfoot>
+        </table>
+      </div>
+      <div class="grid-3" style="margin-top: 16px;">
+        <label>
+          Ay
+          <select id="monthSelect"></select>
+        </label>
+        <label>
+          Yıl
+          <input type="number" id="yearInput" min="2000" max="2100" />
+        </label>
+        <label>
+          Ayın Gün Sayısı
+          <input type="number" id="daysInput" min="1" max="31" />
+        </label>
+      </div>
+      <div class="toggle" style="margin-top: 12px;">
+        <input type="checkbox" id="manualDays" />
+        <span>Ayın gün sayısını manuel belirle</span>
+      </div>
+      <div class="totals">
+        <div class="card">
+          <div class="label">Toplam Aylık Sabit Gider</div>
+          <div class="value warn" id="totalMonthly">0 TL</div>
+        </div>
+        <div class="card">
+          <div class="label">Günlük Sabit Gider</div>
+          <div class="value warn" id="dailyFixed">0 TL</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="span-2">
+      <div class="toolbar">
+        <div>
+          <h2>3) Günlük Satışlar</h2>
+          <p class="subtle">Günlük satış adetlerini girerek brüt ve net kârı görün.</p>
+        </div>
+        <div class="group">
+          <button class="btn-outline" id="addEntry">+ Gün Ekle</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 20%">Tarih</th>
+              <th class="cell-right">Porsiyon Adet</th>
+              <th class="cell-right">500g Adet</th>
+              <th class="cell-right">1kg Adet</th>
+              <th class="cell-right">Günlük Brüt Net (TL)</th>
+              <th class="cell-right">Günlük Gerçek Net (TL)</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody id="entryBody"></tbody>
+          <tfoot id="entryFoot"></tfoot>
+        </table>
+      </div>
+      <p class="note">Günlük gerçek net, güncel günlük sabit giderin düşülmüş halidir.</p>
+    </section>
+
+    <section class="span-2">
+      <h2>4) Özet</h2>
+      <div class="toggle" style="margin: 12px 0 16px;">
+        <input type="checkbox" id="allocateOnlyEntered" />
+        <span>Sabit gideri sadece girilen günlere dağıt</span>
+      </div>
+      <div class="summary-grid">
+        <div class="card">
+          <div class="label">Toplam Brüt Net</div>
+          <div class="value" id="totalGross">0 TL</div>
+        </div>
+        <div class="card">
+          <div class="label">Dağıtılan Toplam Sabit Gider</div>
+          <div class="value warn" id="totalFixedAllocated">0 TL</div>
+        </div>
+        <div class="card">
+          <div class="label">Toplam Gerçek Net</div>
+          <div class="value" id="totalReal">0 TL</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="span-2">
+      <div class="toolbar">
+        <div>
+          <h2>5) Veri Araçları</h2>
+          <p class="subtle">Veriler bu tarayıcıda yerel olarak saklanır. Yedeklemek için dışa aktarın.</p>
+        </div>
+        <div class="group">
+          <button class="btn-accent" id="exportData">JSON Dışa Aktar</button>
+          <label class="btn-outline" style="cursor: pointer;">
+            JSON İçe Aktar
+            <input type="file" id="importData" accept="application/json" hidden />
+          </label>
+          <button class="btn-danger" id="resetData">Tüm Verileri Sıfırla</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Günlük net kâr takibi için hazırlanmıştır.
+  </footer>
+
+  <script>
+    const STORAGE_KEY = "gunluk_net_kar_v1";
+    const SAVE_DEBOUNCE_MS = 150;
+
+    const monthNames = [
+      "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+      "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
+
+    const defaultState = {
+      settings: {
+        portionProfit: 140,
+        profit500g: 140,
+        profit1kg: 235
+      },
+      month: {
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1,
+        daysInMonth: null
+      },
+      allocateOnlyEnteredDays: true,
+      expenses: [
+        { name: "Kira", amount: 0 }
+      ],
+      entries: []
+    };
+
+    let state = loadState();
+    let saveTimer;
+
+    const elements = {
+      portionProfit: document.getElementById("portionProfit"),
+      profit500g: document.getElementById("profit500g"),
+      profit1kg: document.getElementById("profit1kg"),
+      expenseBody: document.getElementById("expenseBody"),
+      expenseFoot: document.getElementById("expenseFoot"),
+      addExpense: document.getElementById("addExpense"),
+      monthSelect: document.getElementById("monthSelect"),
+      yearInput: document.getElementById("yearInput"),
+      daysInput: document.getElementById("daysInput"),
+      manualDays: document.getElementById("manualDays"),
+      totalMonthly: document.getElementById("totalMonthly"),
+      dailyFixed: document.getElementById("dailyFixed"),
+      entryBody: document.getElementById("entryBody"),
+      entryFoot: document.getElementById("entryFoot"),
+      addEntry: document.getElementById("addEntry"),
+      allocateOnlyEntered: document.getElementById("allocateOnlyEntered"),
+      totalGross: document.getElementById("totalGross"),
+      totalFixedAllocated: document.getElementById("totalFixedAllocated"),
+      totalReal: document.getElementById("totalReal"),
+      exportData: document.getElementById("exportData"),
+      importData: document.getElementById("importData"),
+      resetData: document.getElementById("resetData")
+    };
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        const freshState = structuredClone(defaultState);
+        persistState(freshState);
+        return freshState;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        const merged = mergeState(parsed);
+        persistState(merged);
+        return merged;
+      } catch (error) {
+        const freshState = structuredClone(defaultState);
+        persistState(freshState);
+        return freshState;
+      }
+    }
+
+    function mergeState(parsed) {
+      return {
+        ...structuredClone(defaultState),
+        ...parsed,
+        settings: {
+          ...structuredClone(defaultState.settings),
+          ...(parsed.settings || {})
+        },
+        month: {
+          ...structuredClone(defaultState.month),
+          ...(parsed.month || {})
+        },
+        expenses: Array.isArray(parsed.expenses) ? parsed.expenses : structuredClone(defaultState.expenses),
+        entries: Array.isArray(parsed.entries) ? parsed.entries : []
+      };
+    }
+
+    function persistState(nextState) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
+    }
+
+    function scheduleSave() {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => persistState(state), SAVE_DEBOUNCE_MS);
+    }
+
+    function formatCurrency(value) {
+      return `${value.toFixed(2)} TL`;
+    }
+
+    function computeDaysInMonth(year, month) {
+      return new Date(year, month, 0).getDate();
+    }
+
+    function getActiveDaysInMonth() {
+      if (state.month.daysInMonth === null) {
+        return computeDaysInMonth(state.month.year, state.month.month);
+      }
+      return Number(state.month.daysInMonth) || computeDaysInMonth(state.month.year, state.month.month);
+    }
+
+    function renderMonthSelect() {
+      elements.monthSelect.innerHTML = monthNames
+        .map((name, index) => `<option value="${index + 1}">${name}</option>`)
+        .join("");
+    }
+
+    function renderSettings() {
+      elements.portionProfit.value = state.settings.portionProfit;
+      elements.profit500g.value = state.settings.profit500g;
+      elements.profit1kg.value = state.settings.profit1kg;
+    }
+
+    function renderExpenses() {
+      elements.expenseBody.innerHTML = state.expenses
+        .map(
+          (expense, index) => `
+            <tr data-index="${index}">
+              <td><input type="text" value="${expense.name}" data-field="name" /></td>
+              <td class="cell-right"><input type="number" step="0.01" value="${expense.amount}" data-field="amount" /></td>
+              <td class="row-actions">
+                <button class="btn-danger" data-action="remove-expense">Sil</button>
+              </td>
+            </tr>
+          `
+        )
+        .join("");
+      renderExpenseFooter();
+    }
+
+    function renderEntries() {
+      elements.entryBody.innerHTML = state.entries
+        .map(
+          (entry, index) => {
+            const dailyReal = calculateDailyReal(entry);
+            const realClass = dailyReal >= 0 ? "good" : "bad";
+            return `
+            <tr data-index="${index}">
+              <td><input type="date" value="${entry.date}" data-field="date" /></td>
+              <td class="cell-right"><input type="number" min="0" value="${entry.portionQty}" data-field="portionQty" /></td>
+              <td class="cell-right"><input type="number" min="0" value="${entry.qty500g}" data-field="qty500g" /></td>
+              <td class="cell-right"><input type="number" min="0" value="${entry.qty1kg}" data-field="qty1kg" /></td>
+              <td class="cell-right">${formatCurrency(calculateDailyGross(entry))}</td>
+              <td class="cell-right value ${realClass}">${formatCurrency(dailyReal)}</td>
+              <td class="row-actions">
+                <button class="btn-danger" data-action="remove-entry">Sil</button>
+              </td>
+            </tr>
+          `;
+          }
+        )
+        .join("");
+      renderEntryFooter();
+    }
+
+    function calculateDailyGross(entry) {
+      return (
+        entry.portionQty * state.settings.portionProfit +
+        entry.qty500g * state.settings.profit500g +
+        entry.qty1kg * state.settings.profit1kg
+      );
+    }
+
+    function calculateDailyReal(entry) {
+      return calculateDailyGross(entry) - getDailyFixedExpense();
+    }
+
+    function getTotalMonthlyExpenses() {
+      return state.expenses.reduce((total, expense) => total + Number(expense.amount || 0), 0);
+    }
+
+    function getDailyFixedExpense() {
+      const days = Math.max(1, getActiveDaysInMonth());
+      return getTotalMonthlyExpenses() / days;
+    }
+
+    function getEnteredDayCount() {
+      return state.entries.filter((entry) => {
+        const hasQty = entry.portionQty || entry.qty500g || entry.qty1kg;
+        return entry.date || hasQty;
+      }).length;
+    }
+
+    function renderTotals() {
+      const totalMonthly = getTotalMonthlyExpenses();
+      const dailyFixed = getDailyFixedExpense();
+      const totalGross = state.entries.reduce((sum, entry) => sum + calculateDailyGross(entry), 0);
+      const enteredDays = getEnteredDayCount();
+      const totalFixedAllocated = state.allocateOnlyEnteredDays
+        ? dailyFixed * enteredDays
+        : totalMonthly;
+      const totalReal = totalGross - totalFixedAllocated;
+
+      elements.totalMonthly.textContent = formatCurrency(totalMonthly);
+      elements.dailyFixed.textContent = formatCurrency(dailyFixed);
+      elements.totalGross.textContent = formatCurrency(totalGross);
+      elements.totalFixedAllocated.textContent = formatCurrency(totalFixedAllocated);
+      elements.totalReal.textContent = formatCurrency(totalReal);
+      elements.totalReal.classList.toggle("good", totalReal >= 0);
+      elements.totalReal.classList.toggle("bad", totalReal < 0);
+    }
+
+    function renderExpenseFooter() {
+      const totalMonthly = getTotalMonthlyExpenses();
+      elements.expenseFoot.innerHTML = `
+        <tr>
+          <td>Toplam</td>
+          <td class="cell-right">${formatCurrency(totalMonthly)}</td>
+          <td></td>
+        </tr>
+      `;
+    }
+
+    function renderEntryFooter() {
+      const totalPortion = state.entries.reduce((sum, entry) => sum + Number(entry.portionQty || 0), 0);
+      const total500g = state.entries.reduce((sum, entry) => sum + Number(entry.qty500g || 0), 0);
+      const total1kg = state.entries.reduce((sum, entry) => sum + Number(entry.qty1kg || 0), 0);
+      const totalGross = state.entries.reduce((sum, entry) => sum + calculateDailyGross(entry), 0);
+      const totalReal = state.entries.reduce((sum, entry) => sum + calculateDailyReal(entry), 0);
+      const realClass = totalReal >= 0 ? "good" : "bad";
+
+      elements.entryFoot.innerHTML = `
+        <tr>
+          <td>Toplam</td>
+          <td class="cell-right">${totalPortion}</td>
+          <td class="cell-right">${total500g}</td>
+          <td class="cell-right">${total1kg}</td>
+          <td class="cell-right">${formatCurrency(totalGross)}</td>
+          <td class="cell-right value ${realClass}">${formatCurrency(totalReal)}</td>
+          <td></td>
+        </tr>
+      `;
+    }
+
+    function syncMonthYear() {
+      elements.monthSelect.value = state.month.month;
+      elements.yearInput.value = state.month.year;
+      const isManualDays = state.month.daysInMonth !== null;
+      elements.manualDays.checked = isManualDays;
+      elements.daysInput.value = isManualDays ? state.month.daysInMonth : getActiveDaysInMonth();
+      elements.daysInput.disabled = !isManualDays;
+    }
+
+    function syncToggle() {
+      elements.allocateOnlyEntered.checked = state.allocateOnlyEnteredDays;
+    }
+
+    function addExpenseRow() {
+      state.expenses.push({ name: "", amount: 0 });
+      scheduleSave();
+      renderExpenses();
+      renderTotals();
+      renderEntries();
+    }
+
+    function addEntryRow() {
+      state.entries.push({
+        date: "",
+        portionQty: 0,
+        qty500g: 0,
+        qty1kg: 0
+      });
+      scheduleSave();
+      renderEntries();
+      renderTotals();
+    }
+
+    function updateExpense(index, field, value) {
+      const expense = state.expenses[index];
+      if (!expense) return;
+      expense[field] = field === "amount" ? Number(value) : value;
+      scheduleSave();
+      renderTotals();
+      renderEntries();
+    }
+
+    function updateEntry(index, field, value) {
+      const entry = state.entries[index];
+      if (!entry) return;
+      if (["portionQty", "qty500g", "qty1kg"].includes(field)) {
+        entry[field] = Number(value);
+      } else {
+        entry[field] = value;
+      }
+      scheduleSave();
+      renderEntries();
+      renderTotals();
+    }
+
+    function removeExpense(index) {
+      state.expenses.splice(index, 1);
+      scheduleSave();
+      renderExpenses();
+      renderTotals();
+      renderEntries();
+    }
+
+    function removeEntry(index) {
+      state.entries.splice(index, 1);
+      scheduleSave();
+      renderEntries();
+      renderTotals();
+    }
+
+    function handleExport() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "gunluk-net-kar-verisi.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function handleImport(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          state = mergeState(parsed);
+          persistState(state);
+          initialize();
+        } catch (error) {
+          alert("Geçersiz JSON dosyası.");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    function handleReset() {
+      if (!confirm("Tüm veriler sıfırlansın mı? Bu işlem geri alınamaz.")) return;
+      state = structuredClone(defaultState);
+      persistState(state);
+      initialize();
+    }
+
+    function initialize() {
+      renderSettings();
+      renderExpenses();
+      renderEntries();
+      renderTotals();
+      syncMonthYear();
+      syncToggle();
+    }
+
+    elements.portionProfit.addEventListener("input", (event) => {
+      state.settings.portionProfit = Number(event.target.value);
+      scheduleSave();
+      renderEntries();
+      renderTotals();
+    });
+
+    elements.profit500g.addEventListener("input", (event) => {
+      state.settings.profit500g = Number(event.target.value);
+      scheduleSave();
+      renderEntries();
+      renderTotals();
+    });
+
+    elements.profit1kg.addEventListener("input", (event) => {
+      state.settings.profit1kg = Number(event.target.value);
+      scheduleSave();
+      renderEntries();
+      renderTotals();
+    });
+
+    elements.expenseBody.addEventListener("input", (event) => {
+      const row = event.target.closest("tr");
+      if (!row) return;
+      const field = event.target.dataset.field;
+      if (!field) return;
+      updateExpense(Number(row.dataset.index), field, event.target.value);
+    });
+
+    elements.expenseBody.addEventListener("click", (event) => {
+      if (event.target.dataset.action === "remove-expense") {
+        const row = event.target.closest("tr");
+        if (row) removeExpense(Number(row.dataset.index));
+      }
+    });
+
+    elements.entryBody.addEventListener("input", (event) => {
+      const row = event.target.closest("tr");
+      if (!row) return;
+      const field = event.target.dataset.field;
+      if (!field) return;
+      updateEntry(Number(row.dataset.index), field, event.target.value);
+    });
+
+    elements.entryBody.addEventListener("click", (event) => {
+      if (event.target.dataset.action === "remove-entry") {
+        const row = event.target.closest("tr");
+        if (row) removeEntry(Number(row.dataset.index));
+      }
+    });
+
+    elements.addExpense.addEventListener("click", addExpenseRow);
+    elements.addEntry.addEventListener("click", addEntryRow);
+
+    elements.monthSelect.addEventListener("change", (event) => {
+      state.month.month = Number(event.target.value);
+      if (state.month.daysInMonth !== null) {
+        state.month.daysInMonth = computeDaysInMonth(state.month.year, state.month.month);
+      }
+      scheduleSave();
+      syncMonthYear();
+      renderTotals();
+      renderEntries();
+    });
+
+    elements.yearInput.addEventListener("input", (event) => {
+      state.month.year = Number(event.target.value);
+      if (state.month.daysInMonth !== null) {
+        state.month.daysInMonth = computeDaysInMonth(state.month.year, state.month.month);
+      }
+      scheduleSave();
+      syncMonthYear();
+      renderTotals();
+      renderEntries();
+    });
+
+    elements.manualDays.addEventListener("change", (event) => {
+      state.month.daysInMonth = event.target.checked ? getActiveDaysInMonth() : null;
+      scheduleSave();
+      syncMonthYear();
+      renderTotals();
+      renderEntries();
+    });
+
+    elements.daysInput.addEventListener("input", (event) => {
+      state.month.daysInMonth = Number(event.target.value);
+      scheduleSave();
+      renderTotals();
+      renderEntries();
+    });
+
+    elements.allocateOnlyEntered.addEventListener("change", (event) => {
+      state.allocateOnlyEnteredDays = event.target.checked;
+      scheduleSave();
+      renderTotals();
+    });
+
+    elements.exportData.addEventListener("click", handleExport);
+    elements.importData.addEventListener("change", handleImport);
+    elements.resetData.addEventListener("click", handleReset);
+
+    renderMonthSelect();
+    initialize();
+  </script>
+</body>
+</html>
